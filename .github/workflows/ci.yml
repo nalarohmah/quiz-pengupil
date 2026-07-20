@@ -1,6 +1,6 @@
 name: Automated Selenium Testing
 
-# Trigger untuk menjalankan pipeline
+# Trigger untuk menjalankan pipeline secara otomatis
 on:
   push:
     branches: [ "main" ]
@@ -34,16 +34,15 @@ jobs:
 
     - name: Import Database SQL
       run: |
-        # Asumsi: Anda memiliki folder 'db' yang berisi file .sql untuk membentuk tabel
-        # Ganti 'db/database.sql' dengan lokasi asli file SQL Anda di repositori
-        mysql -h 127.0.0.1 -P 3306 -u root quiz_pengupil < db/database.sql
+        # Mengimpor file SQL dari folder db proyek Anda
+        mysql -h 127.0.0.1 -P 3306 -u root quiz_pengupil < db/quiz_pengupil.sql
 
     - name: Start PHP Built-in Server
       run: |
         # Menjalankan server lokal PHP di port 8000 di background
         php -S localhost:8000 &
         
-        # Jeda 2 detik untuk memastikan server menyala
+        # Jeda 2 detik untuk memastikan server menyala dengan baik
         sleep 2 
 
     - name: Set up Python
@@ -58,7 +57,7 @@ jobs:
 
     - name: Run Pytest Selenium
       env:
-        # Menyesuaikan BASE_URL agar mengarah ke server virtual port 8000
+        # Mengarahkan BASE_URL pengujian ke server lokal PHP port 8000
         BASE_URL: http://localhost:8000
       run: |
         pytest test_auth.py -v
