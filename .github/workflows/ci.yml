@@ -34,25 +34,21 @@ jobs:
 
     - name: Import Database SQL
       run: |
-        # Mengimpor file SQL dari folder db proyek
+        # Mengimpor file SQL dari folder db proyek Anda
         mysql -h 127.0.0.1 -P 3306 -u root quiz_pengupil < db/quiz_pengupil.sql
 
     - name: Start PHP Built-in Server
       run: |
-        # Menjalankan server lokal PHP di latar belakang pada port 8000
-        php -S 127.0.0.1:8000 &
+        # Menjalankan server lokal PHP di port 8000 di background
+        php -S localhost:8000 &
         
         # Jeda 2 detik untuk memastikan server menyala dengan baik
         sleep 2 
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: setup-python@v4
       with:
         python-version: '3.10'
-
-    # Menyiapkan browser Chrome agar Selenium bisa berjalan di server Ubuntu
-    - name: Set up Chrome
-      uses: browser-actions/setup-chrome@vlatest
 
     - name: Install dependencies
       run: |
@@ -62,6 +58,6 @@ jobs:
     - name: Run Pytest Selenium
       env:
         # Mengarahkan BASE_URL pengujian ke server lokal PHP port 8000
-        BASE_URL: http://127.0.0.1:8000
+        BASE_URL: http://localhost:8000
       run: |
         pytest test_auth.py -v
