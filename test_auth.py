@@ -12,12 +12,15 @@ BASE_URL = os.getenv("BASE_URL", "http://localhost/quiz-pengupil-main")
 @pytest.fixture
 def driver():
     chrome_options = Options()
-    chrome_options.add_argument("--headless") # Mode headless WAJIB aktif untuk CI/CD
+    chrome_options.add_argument("--headless") 
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    # Tambahkan 2 baris ini agar ukuran layar server virtual pas dan elemen tidak tersembunyi:
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-gpu")
     
     driver = webdriver.Chrome(options=chrome_options)
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(10) # Naikkan sedikit waktu tunggu dari 5 ke 10 detik
     yield driver
     driver.quit()
 
